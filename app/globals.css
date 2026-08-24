@@ -47,11 +47,15 @@ nav .nav-active { color:var(--ink); border-bottom:2px solid var(--gold); }
 .form-grid > label { color:#5e615a; font-size:12px; }
 .form-grid select { display:block; width:100%; border:1px solid #d8d4ca; border-radius:0; background:#fff; color:var(--ink); padding:10px 8px; margin-top:6px; font-size:13px; }
 .form-grid input { display:block; width:100%; border:1px solid #d8d4ca; border-radius:0; background:#fff; color:var(--ink); padding:10px 8px; margin-top:6px; font-size:13px; }
+.maker-input { display:flex; gap:6px; margin-top:6px; }
+.maker-input input { margin-top:0; }
+.maker-input button { border:1px solid #d8d4ca; background:#f7f5ef; color:var(--moss); font-size:11px; padding:0 10px; white-space:nowrap; }
 .field-hint { display:block; color:#77907e; font-size:10px; margin-top:4px; }
 .certificate-row { align-items:center; border-top:1px solid var(--line); display:flex; font-size:12px; gap:10px; margin:0 0 21px; padding-top:15px; color:#5e615a; }
 .certificate-row small { color:var(--moss); }
 .evidence-check { align-items:center; color:#66675f; display:inline-flex; font-size:11px; gap:4px; margin-left:3px; }
 .evidence-check input { accent-color:var(--moss); }
+.evidence-note { color:#979286 !important; font-size:10px !important; margin-left:auto; }
 .switch { display:inline-block; position:relative; width:39px; height:22px; }
 .switch input { opacity:0; width:0; height:0; }
 .switch span { position:absolute; inset:0; background:#cfcfc6; border-radius:30px; transition:.2s; }
