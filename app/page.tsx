@@ -4,6 +4,7 @@ import { ChangeEvent, useMemo, useState } from "react";
 
 type KimonoGroup = "礼装" | "普段着" | "夏物" | "男性" | "子ども" | "外出着" | "帯";
 type Listing = { title: string; price: number; date: string; kind: string; group: KimonoGroup; condition: string; source: string; image: string; season: string; origin: string; technique: string };
+type KimonoPhoto = { url: string; purpose: string };
 
 const typeGroups: Record<KimonoGroup, string[]> = {
   "礼装": ["黒留袖", "色留袖", "振袖", "訪問着", "付下げ", "色無地", "喪服", "打掛"],
@@ -22,6 +23,7 @@ const originGroups = {
 };
 
 const unknownValue = "不明・その他";
+const photoPurposes = ["全体・前面", "全体・背面", "衿・袖口", "証紙・反端・落款", "気になる箇所", "その他"];
 
 const listings: Listing[] = [
   { title: "本場大島紬 7マルキ 証紙あり", price: 24800, date: "2026/08/16", kind: "紬", group: "普段着", condition: "美品", source: "オークション", image: "紬", season: "袷", origin: "本場大島紬", technique: "泥染め" },
@@ -40,7 +42,7 @@ const yen = (n: number) => new Intl.NumberFormat("ja-JP").format(n);
 
 export default function Home() {
   const [active, setActive] = useState<"assess" | "market">("assess");
-  const [photo, setPhoto] = useState<string | null>(null);
+  const [photos, setPhotos] = useState<KimonoPhoto[]>([]);
   const [kind, setKind] = useState("紬");
   const [origin, setOrigin] = useState("本場大島紬");
   const [condition, setCondition] = useState("美品");
@@ -62,7 +64,13 @@ export default function Home() {
   const market = Math.round(21400 * conditionFactor * evidenceFactor * makerFactor * (kindFactors[kind] ?? 0.82) * (originFactors[origin] ?? 0.9) / 100) * 100;
   const result = { low: Math.round(market * 0.82 / 100) * 100, high: Math.round(market * 1.18 / 100) * 100 };
   const filtered = useMemo(() => listings.filter((item) => (marketGroup === "すべて" || item.group === marketGroup) && (marketOrigin === "すべて" || item.origin === marketOrigin) && (`${item.title}${item.kind}${item.group}${item.season}${item.origin}${item.technique}`.includes(query) || !query)), [query, marketGroup, marketOrigin]);
-  const handlePhoto = (event: ChangeEvent<HTMLInputElement>) => { const file = event.target.files?.[0]; if (file) setPhoto(URL.createObjectURL(file)); };
+  const handlePhotos = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files ?? []).slice(0, 5 - photos.length);
+    if (files.length) setPhotos((current) => [...current, ...files.map((file, index) => ({ url: URL.createObjectURL(file), purpose: photoPurposes[Math.min(current.length + index, photoPurposes.length - 1)] }))]);
+    event.currentTarget.value = "";
+  };
+  const removePhoto = (index: number) => setPhotos((current) => current.filter((_, photoIndex) => photoIndex !== index));
+  const setPhotoPurpose = (index: number, purpose: string) => setPhotos((current) => current.map((photo, photoIndex) => photoIndex === index ? { ...photo, purpose } : photo));
   const selectedGroup = kind === unknownValue ? "不明" : Object.entries(typeGroups).find(([, types]) => types.includes(kind))?.[0] ?? "不明";
 
   return <main>
@@ -72,7 +80,7 @@ export default function Home() {
       <div className="tab-row"><button className={active === "assess" ? "tab active" : "tab"} onClick={() => setActive("assess")}>写真から相場をみる</button><button className={active === "market" ? "tab active" : "tab"} onClick={() => setActive("market")}>成約相場を検索</button></div>
       {active === "assess" ? <div className="assessment">
         <section className="panel input-panel"><div className="section-label">STEP 1 / 写真</div><h2>着物の写真を追加</h2><p className="muted">全体・衿元・証紙・気になる箇所があると、より参考になります。</p>
-          <label className={photo ? "upload has-photo" : "upload"}>{photo ? <img src={photo} alt="アップロードした着物" /> : <><b>＋</b><span>写真をアップロード</span><small>JPG・PNG（最大10MB）</small></>}<input type="file" accept="image/*" onChange={handlePhoto} /></label>
+          <div className="photo-section"><div className="photo-section-head"><span>査定用写真 <b>{photos.length}/5枚</b></span><small>全体・証紙・気になる箇所を登録すると精度が上がります。</small></div>{photos.length > 0 && <div className="photo-grid">{photos.map((photo, index) => <div className="photo-card" key={photo.url}><img src={photo.url} alt={`登録写真 ${index + 1}`} />{index === 0 && <span className="cover-photo">代表</span>}<button type="button" className="remove-photo" onClick={() => removePhoto(index)} aria-label={`${index + 1}枚目を削除`}>×</button><select aria-label={`${index + 1}枚目の写真用途`} value={photo.purpose} onChange={(event) => setPhotoPurpose(index, event.target.value)}>{photoPurposes.map((purpose) => <option key={purpose}>{purpose}</option>)}</select></div>)}</div>} {photos.length < 5 && <label className="upload multi-upload"><b>＋</b><span>{photos.length ? "写真を追加" : "写真をアップロード"}</span><small>JPG・PNG・HEIC / 最大5枚</small><input type="file" accept="image/*,.heic,.heif" multiple onChange={handlePhotos} /></label>}</div>
           <div className="section-label details-label">STEP 2 / 着物の特徴</div>
           <div className="form-grid">
             <label>種類<select value={kind} onChange={(e) => setKind(e.target.value)}>{Object.entries(typeGroups).map(([group, types]) => <optgroup label={group} key={group}>{types.map((type) => <option key={type}>{type}</option>)}</optgroup>)}<option>{unknownValue}</option></select><small className="field-hint">分類：{selectedGroup}</small></label>
