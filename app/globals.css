@@ -46,9 +46,12 @@ nav .nav-active { color:var(--ink); border-bottom:2px solid var(--gold); }
 .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:13px 0 17px; }
 .form-grid > label { color:#5e615a; font-size:12px; }
 .form-grid select { display:block; width:100%; border:1px solid #d8d4ca; border-radius:0; background:#fff; color:var(--ink); padding:10px 8px; margin-top:6px; font-size:13px; }
+.form-grid input { display:block; width:100%; border:1px solid #d8d4ca; border-radius:0; background:#fff; color:var(--ink); padding:10px 8px; margin-top:6px; font-size:13px; }
 .field-hint { display:block; color:#77907e; font-size:10px; margin-top:4px; }
 .certificate-row { align-items:center; border-top:1px solid var(--line); display:flex; font-size:12px; gap:10px; margin:0 0 21px; padding-top:15px; color:#5e615a; }
 .certificate-row small { color:var(--moss); }
+.evidence-check { align-items:center; color:#66675f; display:inline-flex; font-size:11px; gap:4px; margin-left:3px; }
+.evidence-check input { accent-color:var(--moss); }
 .switch { display:inline-block; position:relative; width:39px; height:22px; }
 .switch input { opacity:0; width:0; height:0; }
 .switch span { position:absolute; inset:0; background:#cfcfc6; border-radius:30px; transition:.2s; }
@@ -89,6 +92,10 @@ nav .nav-active { color:var(--ink); border-bottom:2px solid var(--gold); }
 .type-filter > span { color:var(--muted); font-size:11px; margin-right:3px; }
 .chip { border:1px solid var(--line); background:#fff; padding:6px 12px; font-size:11px; color:#6a6c66; }
 .chip.selected { color:#fff; background:var(--moss); border-color:var(--moss); }
+.origin-filter { align-items:center; background:#f7f5ed; border:1px solid #e4ded2; display:flex; gap:16px; margin:0 0 16px; padding:10px 12px; }
+.origin-filter label { color:#5e615a; font-size:11px; font-weight:bold; }
+.origin-filter select { background:#fff; border:1px solid #d8d4ca; color:var(--ink); font-size:12px; margin-left:8px; padding:6px; }
+.origin-filter span { color:#77736b; font-size:10px; }
 .kind-catalog { background:#f2f2e9; border-left:3px solid var(--gold); display:grid; grid-template-columns:repeat(4,1fr); margin-bottom:20px; }
 .kind-catalog div { border-right:1px solid #dedacd; padding:10px 12px; }
 .kind-catalog div:last-child { border:0; }
@@ -126,6 +133,9 @@ footer { border-top:1px solid var(--line); color:#8c887f; text-align:center; fon
   .search { margin-top:18px; width:100%; }
   .listing-grid { grid-template-columns:1fr; }
   .form-grid { gap:12px; }
+  .certificate-row { flex-wrap:wrap; }
+  .origin-filter { align-items:flex-start; flex-direction:column; gap:7px; }
+  .origin-filter select { margin-left:5px; }
   .kind-catalog { grid-template-columns:1fr 1fr; }
   .kind-catalog div:nth-child(2) { border-right:0; }
   .kind-catalog div:nth-child(-n+2) { border-bottom:1px solid #dedacd; }
